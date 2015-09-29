@@ -23,3 +23,5 @@ accounts-ui
 accounts-password
 email
 check
+accounts-base
+iron:router

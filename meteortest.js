@@ -32,6 +32,8 @@ if (Meteor.isClient) {
             event.target.message.value = "";
         }
     });
+
+
 }
 
 if (Meteor.isServer) {
@@ -45,6 +47,7 @@ if (Meteor.isServer) {
     });
 
     Meteor.methods({
+        // Add an mail sender method
         sendEmail: function (to, from, subject, text) {
             check([to, from, subject, text], [String]);
 
@@ -59,6 +62,24 @@ if (Meteor.isServer) {
                 text: text
             });
         }
+    });
+
+    // Send an email on user creation
+    Accounts.onCreateUser(function(options, user) {
+        if(!options || !user) {
+            console.log('error creating user');
+            return;
+        } else {
+            if(options.profile) {
+                user.profile = options.profile;
+            }
+            Meteor.call('sendEmail',
+                user.emails[0].address,
+                'test@test.fr',
+                'welcome',
+                'Lorem ipsum...');
+        }
+        return user;
     });
 }
 
